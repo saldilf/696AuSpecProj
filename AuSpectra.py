@@ -53,23 +53,27 @@ yLabel3 = sheet1.cell(0,3).value
 
 
 
+
 #for loop that plots/analyzes based on how many columns
-
-#for x in range(1,c):
-plt.plot(lambdas,abso1,linewidth=2,label=yLabel1)
-plt.plot(lambdas,abso2,linewidth=2,label=yLabel2)
-plt.plot(lambdas,abso3,linewidth=2,label=yLabel3)
-plt.xlabel(xLabel)
-plt.ylabel('Absorbance')
-
-axes = plt.gca()
-axes.set_ylim([0 , max(abso3) + 0.5])
-
-plt.legend()
-plt.show()
+for x in range(1,c):
+    plt.plot(lambdas,sheet1.col_values(colx = x,start_rowx = r-301,end_rowx = r) ,linewidth=2,label= sheet1.cell(0,x).value)
+    plt.xlabel(xLabel)
+    plt.ylabel('Absorbance')
+    plt.legend()
+    axes = plt.gca()
+    axes.set_ylim([0 , 1.5])
+    
 
 
 
+
+
+
+
+#plt.plot(lambdas,abso2,linewidth=2,label=yLabel2)
+#plt.plot(lambdas,abso3,linewidth=2,label=yLabel3)
+#plt.xlabel(xLabel)
+#plt.ylabel('Absorbance')
 
 
 
