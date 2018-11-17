@@ -18,5 +18,33 @@ TO DO:
 1)put spectra in different csv files and label them. Put a test spectrum for now 
 
 
+
 """
 
+import numpy as np
+from scipy.integrate import odeint
+import matplotlib.pyplot as plt
+import xlrd
+
+path = ('/Users/salwanbutrus/Desktop/Desktop_Organized/ChE696/Project/TemplateData.xlsx')
+wb = xlrd.open_workbook(path)
+sheet1 = wb.sheet_by_index(0)
+
+r = sheet1.nrows
+c = sheet1.ncols
+
+print(r,c)
+
+value = sheet1.cell(0, 0)
+
+print(value)
+
+lambdas = sheet1.col_values(colx = 0,start_rowx = 1,end_rowx = r)
+
+#now  for loop the plots based on how many columns
+
+
+#plot label should be the name of the data in column
+
+
+#Take user input for file
