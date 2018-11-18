@@ -14,6 +14,7 @@ At a minimum, there should be two options that the user can choose to control th
          b) not normalized 
 The info in #1 can just be attached to each spectrum rather than in a table, or both. 
 
+Can also try to find any models in the lit that can predict other properties of the NP from its spectrum
 
 Testing: 
     1) opening file
@@ -25,6 +26,8 @@ Testing:
 import numpy as np
 import matplotlib.pyplot as plt
 import xlrd
+import pandas as pd
+import collections as cl
 
 
 
@@ -50,6 +53,14 @@ xLimUflt = sheet1.cell(r-1,0).value
 xLimU = int(xLimUflt)
 
 
+data = cl.OrderedDict({'Sample ID': [],
+                       'lambdaMax': [], 
+                       'Amax': [],
+                       'Size': [],
+                       'Concentration': []
+                       })
+
+
 #for loop that plots/analyzes based on how many columns
 for x in range(1,c):
     
@@ -58,8 +69,13 @@ for x in range(1,c):
     abso = sheet1.col_values(colx = x,start_rowx = (xLimU - 299)-xLimL,end_rowx = r) #y-vals loop cycles thru
     
     #400 is the lambda we start plotting at
-    print("{} has a lambdaMax of {} at {} absorbance".format(sheet1.cell(0,x).value,  abso.index(max(abso)) + 400  ,  max(abso)  )   ) 
-    
+    #print("{} has a lambdaMax of {} at {} absorbance".format(sheet1.cell(0,x).value,  abso.index(max(abso)) + 400  ,  max(abso)  )   ) 
+    data['Sample ID'].append(sheet1.cell(0,x).value)
+    data['lambdaMax'].append(abso.index(max(abso)) + 400 )
+    data['Amax'].append( max(abso) )
+    data['Size'].append( 'placeholder' )
+    data['Concentration'].append( 'placeholder' )
+
     plt.plot(lambdas, abso ,linewidth=2,label= sheet1.cell(0,x).value)
     plt.xlabel(sheet1.cell(0,0).value)
     plt.ylabel('Absorbance')
@@ -69,7 +85,10 @@ for x in range(1,c):
     axes.set_ylim([0 , 1.5])
 
 
+#cols = [  'Sample ID', 'lambdaMax', 'Amax'  ]
 
+frame = pd.DataFrame(data)
+print(frame)
 
 #to normalize: 
 #for x in range(0,r-1):
