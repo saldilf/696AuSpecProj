@@ -42,7 +42,6 @@ c = sheet1.ncols
 
 
 
-''' NEXT COMMIT: user should enter their x range and code should adapt: ask "what's the lower and upper limit if your lambdas" '''
 
 xLimLflt = sheet1.cell(1,0).value
 xLimL = int(xLimLflt)
@@ -55,7 +54,7 @@ xLimU = int(xLimUflt)
 for x in range(1,c):
     
     #299 is the number of data points minus 2
-    lambdas = sheet1.col_values(colx = 0,start_rowx = (xLimU - 299)-xLimL,end_rowx = r) #x-vals
+    lambdas = sheet1.col_values(colx = 0,start_rowx = (xLimU - 299 ) - xLimL,  end_rowx = r) #x-vals
     abso = sheet1.col_values(colx = x,start_rowx = (xLimU - 299)-xLimL,end_rowx = r) #y-vals loop cycles thru
     
     #400 is the lambda we start plotting at
