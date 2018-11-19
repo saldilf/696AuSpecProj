@@ -6,9 +6,13 @@ Created on Sat Nov 17 15:00:19 2018
 @author: salwanbutrus
 
 
+Utilities
+    1) Size range restriction 
 
 Testing: 
     1) opening file
+        a) not xlsx
+        b) not in folder we're in now
     2)
 
 
@@ -67,10 +71,17 @@ while norm not in ("Yes", "No"):
             size = -0.02111514*(lMax**2.0) + 24.6*(lMax) - 7065.
             #J. Phys. Chem. C 2007, 111, 14664-14669
             
+            if 518 < lMax < 570:
+                data['Size (nm)'].append(size)
+    
+            else:
+                print('outside')
+                data['Size (nm)'].append('outside')
+
+            
             data['Sample ID'].append(sID)
             data['lambdaMax (nm)'].append(lMax)
             data['Amax'].append( Amax )
-            data['Size (nm)'].append(size)
             data['Concentration'].append('placeholder')
         
             plt.plot(lambdas, absoNorm ,linewidth=2,label= sheet1.cell(0,x).value)
