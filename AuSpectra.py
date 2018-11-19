@@ -37,13 +37,12 @@ import collections as cl
 #path = ('/Users/salwanbutrus/Desktop/Desktop_Organized/ChE696/Project/TemplateDataSt400.xlsx')
 #path = ('TemplateDataSt400.xlsx')
 path = input("Enter a file name (e.g. data.xlsx): ")
+norm = input("Would you like to normalize the data to the maximum absorbance?")
 wb = xlrd.open_workbook(path)
 sheet1 = wb.sheet_by_index(0)
 
 r = sheet1.nrows
 c = sheet1.ncols
-
-
 
 
 xLimLflt = sheet1.cell(1,0).value
@@ -54,9 +53,9 @@ xLimU = int(xLimUflt)
 
 
 data = cl.OrderedDict({'Sample ID': [],
-                       'lambdaMax': [], 
+                       'lambdaMax (nm)': [], 
                        'Amax': [],
-                       'Size': [],
+                       'Size (nm)': [],
                        'Concentration': []
                        })
 
@@ -70,10 +69,17 @@ for x in range(1,c):
     
     #400 is the lambda we start plotting at
     #print("{} has a lambdaMax of {} at {} absorbance".format(sheet1.cell(0,x).value,  abso.index(max(abso)) + 400  ,  max(abso)  )   ) 
-    data['Sample ID'].append(sheet1.cell(0,x).value)
-    data['lambdaMax'].append(abso.index(max(abso)) + 400 )
-    data['Amax'].append( max(abso) )
-    data['Size'].append( 'placeholder' )
+    
+    sID = sheet1.cell(0,x).value
+    lMax = abso.index(max(abso)) + 400
+    Amax = max(abso)
+    
+    size = -0.02111514*(lMax**2.0) + 24.6*(lMax) - 7065.
+    
+    data['Sample ID'].append(sID)
+    data['lambdaMax (nm)'].append(lMax)
+    data['Amax'].append( Amax )
+    data['Size (nm)'].append(size)
     data['Concentration'].append( 'placeholder' )
 
     plt.plot(lambdas, abso ,linewidth=2,label= sheet1.cell(0,x).value)
@@ -90,10 +96,12 @@ for x in range(1,c):
 frame = pd.DataFrame(data)
 print(frame)
 
+
+
+
 #to normalize: 
 #for x in range(0,r-1):
  #   abso1log.append(abso1[x]/max(abso))
-
 
 
 
