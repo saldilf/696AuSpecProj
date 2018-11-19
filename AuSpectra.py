@@ -76,10 +76,12 @@ while norm not in ("Yes", "No"):
             plt.plot(lambdas, absoNorm ,linewidth=2,label= sheet1.cell(0,x).value)
             plt.xlabel(sheet1.cell(0,0).value)
             plt.ylabel('Absorbance (Normalized to Amax)')
-            plt.legend()
-            axes = plt.gca()
-            axes.set_xlim([400 , 900])
-            axes.set_ylim([0 , 1.5])
+        
+       # plt.legend()
+        plt.legend(loc='center left', bbox_to_anchor=(1, 0.5), fancybox=True, shadow=True)
+        axes = plt.gca()
+        axes.set_xlim([400 , 700])
+        axes.set_ylim([0 , 1.5])
                 
         
         
@@ -109,10 +111,13 @@ while norm not in ("Yes", "No"):
             plt.plot(lambdas, abso ,linewidth=2,label= sheet1.cell(0,x).value)
             plt.xlabel(sheet1.cell(0,0).value)
             plt.ylabel('Absorbance')
-            plt.legend()
-            axes = plt.gca()
-            axes.set_xlim([400 , 900])
-            axes.set_ylim([0 , Amax + 0.05])
+            
+    
+        plt.legend(loc='center left', bbox_to_anchor=(1, 0.5), fancybox=True, shadow=True)
+        axes = plt.gca()
+        axes.set_xlim([400 , 700])
+        axes.set_ylim([0 , Amax + 0.05])
+           
         
     else:
     	print("Please enter yes or no.")
