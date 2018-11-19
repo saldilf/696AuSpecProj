@@ -37,7 +37,6 @@ import collections as cl
 #path = ('/Users/salwanbutrus/Desktop/Desktop_Organized/ChE696/Project/TemplateDataSt400.xlsx')
 #path = ('TemplateDataSt400.xlsx')
 path = input("Enter a file name (e.g. data.xlsx): ")
-norm = input("Would you like to normalize the data to the maximum absorbance?")
 wb = xlrd.open_workbook(path)
 sheet1 = wb.sheet_by_index(0)
 
@@ -61,6 +60,21 @@ data = cl.OrderedDict({'Sample ID': [],
 
 
 #for loop that plots/analyzes based on how many columns
+    
+    
+    
+norm = None
+while norm not in ("Yes", "No"):
+    norm = input("Would you like to normalize the data to the maximum absorbance? (Enter 'Yes' or 'No') ")
+    if norm == "Yes":
+        print("entered yes")
+    elif norm == "No":
+        print("entered no")
+    else:
+    	print("Please enter yes or no.")
+    
+    
+    
 for x in range(1,c):
     
     #299 is the number of data points minus 2
@@ -75,12 +89,13 @@ for x in range(1,c):
     Amax = max(abso)
     
     size = -0.02111514*(lMax**2.0) + 24.6*(lMax) - 7065.
+    #J. Phys. Chem. C 2007, 111, 14664-14669
     
     data['Sample ID'].append(sID)
     data['lambdaMax (nm)'].append(lMax)
     data['Amax'].append( Amax )
     data['Size (nm)'].append(size)
-    data['Concentration'].append( 'placeholder' )
+    data['Concentration'].append('placeholder')
 
     plt.plot(lambdas, abso ,linewidth=2,label= sheet1.cell(0,x).value)
     plt.xlabel(sheet1.cell(0,0).value)
