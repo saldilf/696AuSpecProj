@@ -31,23 +31,26 @@ import collections as cl
 
 
 
-#read file: this should eventually be an input from user
-
-
-#path = ('/Users/salwanbutrus/Desktop/Desktop_Organized/ChE696/Project/TemplateDataSt400.xlsx')
-#path = ('TemplateDataSt400.xlsx')
 path = input("Enter a file name (e.g. data.xlsx): ")
 wb = xlrd.open_workbook(path)
 sheet1 = wb.sheet_by_index(0)
 
 r = sheet1.nrows
+print(r)
 c = sheet1.ncols
 
 
 xLimLflt = sheet1.cell(1,0).value
 xLimL = int(xLimLflt)
 
+print(xLimLflt)
+print(xLimL)
+
+
 xLimUflt = sheet1.cell(r-1,0).value
+print(xLimUflt)
+print("hello")
+
 xLimU = int(xLimUflt)
 
 
@@ -69,7 +72,7 @@ while norm not in ("Yes", "No"):
     
     if norm == "Yes":
         print("entered yes and normalize below")
-        for x in range(1,c):
+        for x in range(3,c):
             #299 is the number of data points minus 2
             lambdas = sheet1.col_values(colx = 0,start_rowx = (xLimU - 299 ) - xLimL,  end_rowx = r) #x-vals
             abso = sheet1.col_values(colx = x,start_rowx = (xLimU - 299)-xLimL,end_rowx = r) #y-vals loop cycles thru
@@ -100,6 +103,7 @@ while norm not in ("Yes", "No"):
             plt.legend()
             #plt.title('Normalized' )
             axes = plt.gca()
+            axes.set_xlim([400 , 900])
             axes.set_ylim([0 , 1.5])
                 
         
@@ -107,7 +111,7 @@ while norm not in ("Yes", "No"):
     elif norm == "No":
         print("entered no and don't normalize below")
         
-        for x in range(1,c):
+        for x in range(3,c):
             #299 is the number of data points minus 2
             lambdas = sheet1.col_values(colx = 0,start_rowx = (xLimU - 299 ) - xLimL,  end_rowx = r) #x-vals
             abso = sheet1.col_values(colx = x,start_rowx = (xLimU - 299)-xLimL,end_rowx = r) #y-vals loop cycles thru
@@ -122,6 +126,8 @@ while norm not in ("Yes", "No"):
             size = -0.02111514*(lMax**2.0) + 24.6*(lMax) - 7065.
             #J. Phys. Chem. C 2007, 111, 14664-14669
             
+            'if size greater than 570... off corr. and agg -- msg'
+            
             data['Sample ID'].append(sID)
             data['lambdaMax (nm)'].append(lMax)
             data['Amax'].append( Amax )
@@ -133,35 +139,19 @@ while norm not in ("Yes", "No"):
             plt.ylabel('Absorbance')
             plt.legend()
             axes = plt.gca()
-            axes.set_ylim([0 , 1.5])
+            axes.set_xlim([400 , 900])
+            axes.set_ylim([0 , Amax + 0.05])
         
-        
-    
     else:
     	print("Please enter yes or no.")
     
     
 
 
-
-#cols = [  'Sample ID', 'lambdaMax', 'Amax'  ]
-
 frame = pd.DataFrame(data)
 print(frame)
 
 
-
- 
-old = [4., 5. , 6. , 7.]
-new = [ x/5 for x in old]
-print(old)
-print(new)
-
-
-
-#to normalize: 
-#for x in range(0,r-1):
- #   abso1log.append(abso1[x]/max(abso))
 
 
 
