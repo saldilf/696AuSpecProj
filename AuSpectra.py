@@ -59,51 +59,89 @@ data = cl.OrderedDict({'Sample ID': [],
                        })
 
 
-#for loop that plots/analyzes based on how many columns
     
     
-    
+ #for loop that plots/analyzes based on how many columns     
 norm = None
 while norm not in ("Yes", "No"):
+    
     norm = input("Would you like to normalize the data to the maximum absorbance? (Enter 'Yes' or 'No') ")
+    
     if norm == "Yes":
-        print("entered yes")
+        print("entered yes and normalize below")
+        for x in range(1,c):
+            #299 is the number of data points minus 2
+            lambdas = sheet1.col_values(colx = 0,start_rowx = (xLimU - 299 ) - xLimL,  end_rowx = r) #x-vals
+            abso = sheet1.col_values(colx = x,start_rowx = (xLimU - 299)-xLimL,end_rowx = r) #y-vals loop cycles thru
+            
+            #400 is the lambda we start plotting at
+           
+            #print("{} has a lambdaMax of {} at {} absorbance".format(sheet1.cell(0,x).value,  abso.index(max(abso)) + 400  ,  max(abso)  )   ) 
+            
+            sID = sheet1.cell(0,x).value
+            lMax = abso.index(max(abso)) + 400
+            Amax = max(abso)
+           
+            absoNorm = [x/Amax for x in abso]
+ 
+            
+            size = -0.02111514*(lMax**2.0) + 24.6*(lMax) - 7065.
+            #J. Phys. Chem. C 2007, 111, 14664-14669
+            
+            data['Sample ID'].append(sID)
+            data['lambdaMax (nm)'].append(lMax)
+            data['Amax'].append( Amax )
+            data['Size (nm)'].append(size)
+            data['Concentration'].append('placeholder')
+        
+            plt.plot(lambdas, absoNorm ,linewidth=2,label= sheet1.cell(0,x).value)
+            plt.xlabel(sheet1.cell(0,0).value)
+            plt.ylabel('Absorbance (Normalized to Amax)')
+            plt.legend()
+            #plt.title('Normalized' )
+            axes = plt.gca()
+            axes.set_ylim([0 , 1.5])
+                
+        
+        
     elif norm == "No":
-        print("entered no")
+        print("entered no and don't normalize below")
+        
+        for x in range(1,c):
+            #299 is the number of data points minus 2
+            lambdas = sheet1.col_values(colx = 0,start_rowx = (xLimU - 299 ) - xLimL,  end_rowx = r) #x-vals
+            abso = sheet1.col_values(colx = x,start_rowx = (xLimU - 299)-xLimL,end_rowx = r) #y-vals loop cycles thru
+            
+            #400 is the lambda we start plotting at
+            #print("{} has a lambdaMax of {} at {} absorbance".format(sheet1.cell(0,x).value,  abso.index(max(abso)) + 400  ,  max(abso)  )   ) 
+            
+            sID = sheet1.cell(0,x).value
+            lMax = abso.index(max(abso)) + 400
+            Amax = max(abso)
+            
+            size = -0.02111514*(lMax**2.0) + 24.6*(lMax) - 7065.
+            #J. Phys. Chem. C 2007, 111, 14664-14669
+            
+            data['Sample ID'].append(sID)
+            data['lambdaMax (nm)'].append(lMax)
+            data['Amax'].append( Amax )
+            data['Size (nm)'].append(size)
+            data['Concentration'].append('placeholder')
+        
+            plt.plot(lambdas, abso ,linewidth=2,label= sheet1.cell(0,x).value)
+            plt.xlabel(sheet1.cell(0,0).value)
+            plt.ylabel('Absorbance')
+            plt.legend()
+            axes = plt.gca()
+            axes.set_ylim([0 , 1.5])
+        
+        
+    
     else:
     	print("Please enter yes or no.")
     
     
-    
-for x in range(1,c):
-    
-    #299 is the number of data points minus 2
-    lambdas = sheet1.col_values(colx = 0,start_rowx = (xLimU - 299 ) - xLimL,  end_rowx = r) #x-vals
-    abso = sheet1.col_values(colx = x,start_rowx = (xLimU - 299)-xLimL,end_rowx = r) #y-vals loop cycles thru
-    
-    #400 is the lambda we start plotting at
-    #print("{} has a lambdaMax of {} at {} absorbance".format(sheet1.cell(0,x).value,  abso.index(max(abso)) + 400  ,  max(abso)  )   ) 
-    
-    sID = sheet1.cell(0,x).value
-    lMax = abso.index(max(abso)) + 400
-    Amax = max(abso)
-    
-    size = -0.02111514*(lMax**2.0) + 24.6*(lMax) - 7065.
-    #J. Phys. Chem. C 2007, 111, 14664-14669
-    
-    data['Sample ID'].append(sID)
-    data['lambdaMax (nm)'].append(lMax)
-    data['Amax'].append( Amax )
-    data['Size (nm)'].append(size)
-    data['Concentration'].append('placeholder')
 
-    plt.plot(lambdas, abso ,linewidth=2,label= sheet1.cell(0,x).value)
-    plt.xlabel(sheet1.cell(0,0).value)
-    plt.ylabel('Absorbance')
-    plt.legend()
-    plt.title('Not Normalized' )
-    axes = plt.gca()
-    axes.set_ylim([0 , 1.5])
 
 
 #cols = [  'Sample ID', 'lambdaMax', 'Amax'  ]
@@ -111,6 +149,13 @@ for x in range(1,c):
 frame = pd.DataFrame(data)
 print(frame)
 
+
+
+ 
+old = [4., 5. , 6. , 7.]
+new = [ x/5 for x in old]
+print(old)
+print(new)
 
 
 
