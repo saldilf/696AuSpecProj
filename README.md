@@ -8,5 +8,6 @@ Accompanying the spectra will be a table (or) bar graph of particle size (and ot
 -----------
 Things I will add to this program in the future:
   1) user-controlled visualization options. e.g. "do you want subplots or or just one plot, or plot curves X, Y, Z on one plot and A, B, C on another, etc....
-  2)Calculate concentration based on user input of extinction coefficinent, vial path length
+  2) Calculate concentration based on user input of extinction coefficinent, vial path length
   3) let the user control what range of wavelengths to plot
+  4) let user decide how legend looks based on how many columns in excel file
