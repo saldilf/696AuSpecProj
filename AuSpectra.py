@@ -6,23 +6,14 @@ Created on Sat Nov 17 15:00:19 2018
 @author: salwanbutrus
 
 
-Utilities
-    1) Size range restriction 
-
-Testing: 
-    1) opening file
-        a) not xlsx
-        b) not in folder we're in now
-    2)
-
-
 """
-
 import numpy as np
 import matplotlib.pyplot as plt
 import xlrd
 import pandas as pd
 import collections as cl
+import six
+
 
 
 #prompt user to open file and catch erros  
@@ -67,6 +58,8 @@ while norm not in ("Yes", "No"):
     
     if norm == "Yes":
         for x in range(3,c):
+            print("HI")
+
             #299 is the number of data points minus 2
             lambdas = sheet1.col_values(colx = 0,start_rowx = (xLimU - 299 ) - xLimL,  end_rowx = r) #x-vals (wavelength)
             abso = sheet1.col_values(colx = x,start_rowx = (xLimU - 299)-xLimL,end_rowx = r) #y-vals (absorbance)
@@ -92,7 +85,7 @@ while norm not in ("Yes", "No"):
             data['Sample ID'].append(sID)
             data['lambdaMax (nm)'].append(lMax)
             data['Amax'].append( Amax )
-        
+            
             #plot each column (cycle in loop)
             plt.plot(lambdas, absoNorm ,linewidth=2,label= sheet1.cell(0,x).value)
             plt.xlabel(sheet1.cell(0,0).value)
@@ -108,6 +101,8 @@ while norm not in ("Yes", "No"):
     elif norm == "No":
         
         for x in range(3,c):
+            print("HI")
+
             #299 is the number of data points minus 2
             lambdas = sheet1.col_values(colx = 0,start_rowx = (xLimU - 299 ) - xLimL,  end_rowx = r) #x-vals
             abso = sheet1.col_values(colx = x,start_rowx = (xLimU - 299)-xLimL,end_rowx = r) #y-vals loop cycles thru
@@ -142,47 +137,54 @@ while norm not in ("Yes", "No"):
         axes = plt.gca()
         axes.set_xlim([400 , 700])
         axes.set_ylim([0 , Amax + 0.05])
-        plt.show() #show plot from command line
    
         
     else:
     	print("Please enter 'Yes' or 'No' ")
-    
-    
+
+print("hello")    
 #format data dict into a frame
-frame = pd.DataFrame(data)
-print(frame)
-print("MAKE INTO A NICE TABLE")
+#plt.show() #show plot from command line
+
+print("after commentedout pltshow")
+df = pd.DataFrame(data)  
+
 
 IDs = data['Sample ID']
 sizes= data['Size (nm)']
 
-print(len(IDs))
-
-#plt.bar(IDs, sizes)
-#plt.legend()
-
-
-
-#print(IDs[0])
-#print(IDs, sizes)
 
 
 
 
+#plt.savefig('SummaryPlot.png', format='png', dpi=1000)
 
 
-#plt.savefig('testfig.png', format='png', dpi=1000)
+#output data frame as nice table
+def render_mpl_table(data, col_width=4.0, row_height=0.625, font_size=14,
+                     header_color='#40466e', row_colors=['#f1f1f2', 'w'], edge_color='w',
+                     bbox=[0, 0, 1, 1], header_columns=0,
+                     ax=None, **kwargs):
+    if ax is None:
+        size = (np.array(data.shape[::-1]) + np.array([0, 1])) * np.array([col_width, row_height])
+        fig, ax = plt.subplots(figsize=size)
+        ax.axis('off')
 
+    mpl_table = ax.table(cellText=data.values, bbox=bbox, colLabels=data.columns, **kwargs)
 
+    mpl_table.auto_set_font_size(False)
+    mpl_table.set_fontsize(font_size)
 
+    for k, cell in  six.iteritems(mpl_table._cells):
+        cell.set_edgecolor(edge_color)
+        if k[0] == 0 or k[1] < header_columns:
+            cell.set_text_props(weight='bold', color='w')
+            cell.set_facecolor(header_color)
+        else:
+            cell.set_facecolor(row_colors[k[0]%len(row_colors) ])
+    return ax
 
+render_mpl_table(df, header_columns=0, col_width=3.0)
+plt.show()
 
-
-
-    
-
-
-
-
-
+#plt.savefig('SummaryTable.png', format='png', dpi=1000)
