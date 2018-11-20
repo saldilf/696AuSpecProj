@@ -58,7 +58,7 @@ while norm not in ("Yes", "No"):
     
     if norm == "Yes":
         for x in range(3,c):
-            print("HI")
+           
 
             #299 is the number of data points minus 2
             lambdas = sheet1.col_values(colx = 0,start_rowx = (xLimU - 299 ) - xLimL,  end_rowx = r) #x-vals (wavelength)
@@ -101,7 +101,6 @@ while norm not in ("Yes", "No"):
     elif norm == "No":
         
         for x in range(3,c):
-            print("HI")
 
             #299 is the number of data points minus 2
             lambdas = sheet1.col_values(colx = 0,start_rowx = (xLimU - 299 ) - xLimL,  end_rowx = r) #x-vals
@@ -142,22 +141,8 @@ while norm not in ("Yes", "No"):
     else:
     	print("Please enter 'Yes' or 'No' ")
 
-print("hello")    
 #format data dict into a frame
-#plt.show() #show plot from command line
-
-print("after commentedout pltshow")
 df = pd.DataFrame(data)  
-
-
-IDs = data['Sample ID']
-sizes= data['Size (nm)']
-
-
-
-
-
-#plt.savefig('SummaryPlot.png', format='png', dpi=1000)
 
 
 #output data frame as nice table
@@ -185,6 +170,6 @@ def render_mpl_table(data, col_width=4.0, row_height=0.625, font_size=14,
     return ax
 
 render_mpl_table(df, header_columns=0, col_width=3.0)
-plt.show()
 
-#plt.savefig('SummaryTable.png', format='png', dpi=1000)
+plt.show() #show all plots before this line
+
