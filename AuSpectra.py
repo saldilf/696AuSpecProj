@@ -21,10 +21,10 @@ wb = None
     
 while not wb:
     try:
-        wb = xlrd.open_workbook(input("Enter a file name (e.g. data.xlsx):  "))
+        wb = xlrd.open_workbook(input("Enter a file name (e.g. 'LongerTest.xlsx' for the purposes of Prof. Mayes testing):  "))
         
     except FileNotFoundError:
-        print("File not found in this directory. Make sure it is in the directory and follows 'data.xlsx' ")
+        print("File not found in this directory. Make sure it is in the directory and follows and ends with .xlsx")
         wb = None
 
 
@@ -50,96 +50,64 @@ data = cl.OrderedDict({'Sample ID': [],
                        'Size (nm)': []
                        })
 
-#for loop that plots/analyzes based on how many columns     
 norm = None
 while norm not in ("Yes", "No"):
     
     norm = input("Would you like to normalize the data to the maximum absorbance? (Enter 'Yes' or 'No') ")
     
-    if norm == "Yes":
-        for x in range(3,c):
-           
+    #for loop that plots/analyzes based on how many columbsm
+    for x in range(3,c):
+        
+        #299 is the number of data points minus 2
+        lambdas = sheet1.col_values(colx = 0,start_rowx = (xLimU - 299 ) - xLimL,  end_rowx = r) #x-vals (wavelength)
+        abso = sheet1.col_values(colx = x,start_rowx = (xLimU - 299)-xLimL,end_rowx = r) #y-vals (absorbance)
+        
+        #400 is the lambda we start plotting at
+        sID = sheet1.cell(0,x).value #name of each column
+        lMax = abso.index(max(abso)) + 400 #find max lambda for a column
+        Amax = max(abso) #get max Abs to norm against it
 
-            #299 is the number of data points minus 2
-            lambdas = sheet1.col_values(colx = 0,start_rowx = (xLimU - 299 ) - xLimL,  end_rowx = r) #x-vals (wavelength)
-            abso = sheet1.col_values(colx = x,start_rowx = (xLimU - 299)-xLimL,end_rowx = r) #y-vals (absorbance)
-            
-            #400 is the lambda we start plotting at
-            sID = sheet1.cell(0,x).value #name of each column
-            lMax = abso.index(max(abso)) + 400 #find max lambda for a column
-            Amax = max(abso) #get max Abs to norm against it
-           
-            absoNorm = [x/Amax for x in abso] #normalizes to Amax
-            
-            size = -0.02111514*(lMax**2.0) + 24.6*(lMax) - 7065.
-            #J. Phys. Chem. C 2007, 111, 14664-14669
-            
-            #if lambdaMax outisde of this range then 1) particles aggregated and 2)outside of correlation
-            if 518 < lMax < 570:
-                data['Size (nm)'].append(int(size))
-    
-            else:
-                data['Size (nm)'].append('>100')
+        size = -0.02111514*(lMax**2.0) + 24.6*(lMax) - 7065.
+        #J. Phys. Chem. C 2007, 111, 14664-14669
+        
+        #if lambdaMax outisde of this range then 1) particles aggregated and 2)outside of correlation
+        if 518 < lMax < 570:
+            data['Size (nm)'].append(int(size))
 
-            #added extracted/calculated items into dict 'data'
-            data['Sample ID'].append(sID)
-            data['lambdaMax (nm)'].append(lMax)
-            data['Amax'].append( Amax )
-            
-            #plot each column (cycle in loop)
-            plt.plot(lambdas, absoNorm ,linewidth=2,label= sheet1.cell(0,x).value)
+        else:
+            data['Size (nm)'].append('>100')
+
+        #add extracted/calculated items into dict 'data'
+        data['Sample ID'].append(sID)
+        data['lambdaMax (nm)'].append(lMax)
+        data['Amax'].append( Amax )
+           
+        #plot each column (cycle in loop)
+        
+        #normalize
+        if norm == "Yes":
+            absoPlt = [x/Amax for x in abso] #normalizes to Amax
+            plt.plot(lambdas, absoPlt ,linewidth=2,label= sheet1.cell(0,x).value)
             plt.xlabel(sheet1.cell(0,0).value)
             plt.ylabel('Absorbance (Normalized to Amax)')
+            plt.legend(loc='center left', bbox_to_anchor=(1, 0.5), fancybox=True, shadow=True)
+            axes = plt.gca()
+            axes.set_xlim([400 , 700])
+            axes.set_ylim([0 , 1.5])
         
-        plt.legend(loc='center left', bbox_to_anchor=(1, 0.5), fancybox=True, shadow=True)
-        axes = plt.gca()
-        axes.set_xlim([400 , 700])
-        axes.set_ylim([0 , 1.5])
-                
-        
-        
-    elif norm == "No":
-        
-        for x in range(3,c):
-
-            #299 is the number of data points minus 2
-            lambdas = sheet1.col_values(colx = 0,start_rowx = (xLimU - 299 ) - xLimL,  end_rowx = r) #x-vals
-            abso = sheet1.col_values(colx = x,start_rowx = (xLimU - 299)-xLimL,end_rowx = r) #y-vals loop cycles thru
-            
-            #400 is the lambda we start plotting at
-            sID = sheet1.cell(0,x).value #name of each column
-            lMax = abso.index(max(abso)) + 400 #find max lambda for a column
-            Amax = max(abso) #get max Abs to set y-lim
-
-            size = -0.02111514*(lMax**2.0) + 24.6*(lMax) - 7065.
-            #J. Phys. Chem. C 2007, 111, 14664-14669
-            
-            
-            #if lambdaMax outisde of this range then 1) particles aggregated and 2)outside of correlation
-            if 518 < lMax < 570:
-                data['Size (nm)'].append(int(size))
-    
-            else:
-                data['Size (nm)'].append('>100')
-            
-            #added extracted/calculated items into dict 'data'
-            data['Sample ID'].append(sID)
-            data['lambdaMax (nm)'].append(lMax)
-            data['Amax'].append( Amax )
-        
+        #Don't normalize
+        elif norm == "No":
             plt.plot(lambdas, abso ,linewidth=2,label= sheet1.cell(0,x).value)
             plt.xlabel(sheet1.cell(0,0).value)
             plt.ylabel('Absorbance')
-            
-    
-        plt.legend(loc='center left', bbox_to_anchor=(1, 0.5), fancybox=True, shadow=True)
-        axes = plt.gca()
-        axes.set_xlim([400 , 700])
-        axes.set_ylim([0 , Amax + 0.05])
-   
-        
-    else:
-    	print("Please enter 'Yes' or 'No' ")
+            plt.legend(loc='center left', bbox_to_anchor=(1, 0.5), fancybox=True, shadow=True)
+            axes = plt.gca()
+            axes.set_xlim([400 , 700])
+            axes.set_ylim([0 , Amax + 0.05])
+                
+        #if user not entering 'Yes' or 'No'
+        else:
+            print("Please enter 'Yes' or 'No' ")
 
 #format data dict into a frame
 df = pd.DataFrame(data)  
@@ -171,5 +139,5 @@ def render_mpl_table(data, col_width=4.0, row_height=0.625, font_size=14,
 
 render_mpl_table(df, header_columns=0, col_width=3.0)
 
-plt.show() #show all plots before this line
+plt.show() #show all plots/tables created before this line
 
