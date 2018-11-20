@@ -5,7 +5,7 @@ This program does a few things that will save me a lot of time in the future.
 2) Extracts key parameters from each spectrum such as maximum absorbance, wavelength at max absorbance, and size of particle. 
 3) Outputs the plots from (1) and a table summarizing the data in (2)
 
-Everything is automated except the wavelength range. I could make a user command that decides the range, but for my day-to-day purposes and based on how this type of data is reported in the literature, that range works well for gold NPs. For other types of NPs where the nominal spectra will be different from AuNPs, the user would have to modify the code to suit their spectral needs. 
+Everything is automated except the wavelength range. I could make a user command that decides the range, but for my day-to-day purposes and based on how this type of data is reported in the literature, that range works well for gold NPs. For other types of NPs where the nominal spectra will be different from AuNPs, the user would have to modify the code to suit their spectral needs.
 
 -----------
 Things I would like to add to this program in the future:
