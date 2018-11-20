@@ -9,8 +9,8 @@ Everything is automated except the wavelength range. I could make a user command
 
 -----------
 Things I would like to add to this program in the future:
-  1) user-controlled visualization options. e.g. "do you want subplots or just one plot, or plot curves X, Y, Z on one plot and A, B, C on another, etc....
-  2) Calculate concentration based on user input of extinction coefficinent, vial path length
-  3) let the user control what range of wavelengths to plot
-  4) let user decide how legend looks based on how many columns in excel file
-  5) user specifies number of sheets in excel file and which ones to analyze
+  1) User-controlled visualization options. e.g. "do you want subplots or just one plot, or plot curves X, Y, Z on one plot and A, B, C on another," etc.
+  2) Calculate concentration based on user input of extinction coefficinent and vial path length
+  3) Let the user control what range of wavelengths to plot
+  4) Let user decide how the legend looks based on how many columns are in the excel file
+  5) Let user specify number of sheets in excel file and which ones to analyze
